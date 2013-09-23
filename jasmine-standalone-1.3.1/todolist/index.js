@@ -72,154 +72,62 @@ var easy = {
 		var time = date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日' + ' ' + arr_week[date.getDay()];
 
 		return time;
-	}
+	},
 	/*
 	*检查邮箱是否有效，1、检测格式；2、是否已注册
 	*
 	*/
-	isValidEmailOrUname : function(){},
+	isValidEmailOrUname : function(emailstr){
+		
+		//检查格式							
+		var pattern = /^([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+		var rightFormat = pattern.test(emailstr); 
+
+		if(rightFormat){//格式正确
+			
+			var url = '../Event.DB.php';
+			var param = {email:emailstr}
+			jq.getJSON(url,param,function(data){
+				//code == 0 表示成功
+				if(data.code == 0){
+					return true;
+				}
+
+				return false;
+			});
+		}
+
+		return false;
+    },
 
 	/*
 	*检查密码格式，1、长度； 2、是否弱口令
 	*
 	*/
-	isValidPasswd : function(){},
+	isValidPasswd : function(passwd){
+		
+		//检查密码格式
+		var pattern = /^[a-zA-Z0-9`~!@#$%^&*]{6,16}/;
+		var rightFormat = pattern.test(passwd);
+
+		if(rightFormat){//格式正确
+			//检查是否弱口令	
+			//-------waiting---------
+		}			
+		return false;
+	},
 
 	/*
 	*确认密码
 	*
 	*/
-	confirmPasswd : function(){},
-
-
-	//用户类
-	user : {
-		
-		//用户名
-		userName : null;
-
-		//邮箱
-		email : null;
-
-		//密码
-		passwd : null;
-
-		//令牌
-		token : null;
-
-		/*
-		*登录
-		*loginInfo 登录对象，里面存储用户登录需要的信息
-		*/
-		login : function(loginInfo){},
-
-	  	/*
-	   	*注册
-	   	*registerInfo 注册信息对象，里面存储用户注册的信息
-	   	*/
-	  	register : function(registerInfo){},
-
-	  	/*
-	  	*退出
-	   	*
-	   	*/
-		logout : function(){},
-
-		/*
-		*记住密码，自动登录
-		*
-		*/
-		rememberMyLogin : function(){},
-
-		/*
-		*找回密码
-		*
-		*/
-		findMyPassword : function(){},
-
-		/*
-		*检查邮箱
-		*
-		*/
-		isValidEmailOrUname : function(){},
-
-		/*
-		*检查密码
-		*
-		*/
-		isValidPasswd : function(){},
-
-		/*
-		*
-		*
-		*/
+	confirmPasswd : function(confirmpass, firstpass){
+	
+		return confirmpass === firstpass ? true : false;
 	},
 
-	task : {
+
 	
-		/*
-		*获取今天任务
-		*
-		*/
-		getTodayTask : function(){},
-	
-		/*
-		*获取即将任务
-		*
-		*/
-		getFutureTask : function(){},
-
-		/*
-		*获取已完成任务
-		*
-		*/
-		getFinishedTask : function(){},
-
-
-		/*
-		*创建一条任务
-		*
-		*/
-		createOneTask : function(){},
-
-		/*
-		*删除一条任务
-		*
-		*/
-		deleteOneTask : function(){},
-
-		/*
-		*修改一条任务
-		*
-		*/
-		updateOneTask : function(){},
-
-		/*
-		*添加或修改闹钟提醒
-		*
-		*/
-		setClockForTask : function(){},
-
-		/*
-		*删除闹钟提醒
-		*
-		*/
-		deleteClcokForTask : function(){},
-
-
-		/*
-		*自动推送今日未完成到明日
-		*
-		*/
-		updateNotFinishedToTommorror : function(){},
-
-
-		/*
-		*
-		*
-		*/
-		 : function(){},
-	},
 
 },
 
@@ -288,3 +196,193 @@ function login(uname,passwd){
 			}
 	}
 
+//用户类
+var	user = {
+		
+		//用户名
+		userName : null;
+
+		//邮箱
+		email : null;
+
+		//密码
+		passwd : null;
+
+		//令牌
+		token : null;
+
+		/*
+		*登录
+		*loginInfo 登录对象，里面存储用户登录需要的信息，至少包含uname、passwd
+		*/
+		login : function(loginInfo){
+			
+			if(loginInfo.username && loginInfo.passwd){
+				
+				
+				return true;
+			}
+
+			return false;
+		},
+
+	  	/*
+	   	*注册
+	   	*registerInfo 注册信息对象，里面存储用户注册的信息
+	   	*/
+	  	register : function(registerInfo){},
+
+	  	/*
+	  	*退出
+	   	*
+	   	*/
+		logout : function(){},
+
+		/*
+		*记住密码，自动登录
+		*
+		*/
+		rememberMyLogin : function(){},
+
+		/*
+		*找回密码
+		*
+		*/
+		findMyPassword : function(){},
+
+		/*
+		*检查邮箱
+		*
+		*/
+		isValidEmailOrUname : function(){},
+
+		/*
+		*检查密码
+		*
+		*/
+		isValidPasswd : function(){},
+		
+		/*
+		 *检查邮箱是否有效，1、检测格式；2、是否已注册
+		 *
+		 */
+		isValidEmailOrUname : function(emailstr){
+
+			//检查格式							
+			var pattern = /^([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+			var rightFormat = pattern.test(emailstr); 
+
+			if(rightFormat){//格式正确
+
+				var url = '../Event.DB.php';
+				var param = {email:emailstr}
+				jq.getJSON(url,param,function(data){
+					//code == 0 表示成功
+					if(data.code == 0){
+						return true;
+					}
+
+					return false;
+				});
+			}
+
+			return false;
+		},
+
+		/*
+		 *检查密码格式，1、长度； 2、是否弱口令
+		 *
+		 */
+		isValidPasswd : function(passwd){
+
+			//检查密码格式
+			var pattern = /^[a-zA-Z0-9`~!@#$%^&*]{6,16}/;
+			var rightFormat = pattern.test(passwd);
+
+			if(rightFormat){//格式正确
+				//检查是否弱口令	
+				//-------waiting---------
+			}			
+			return false;
+		},
+
+		/*
+		 *确认密码
+		 *
+		 */
+		confirmPasswd : function(confirmpass, firstpass){
+
+			return confirmpass === firstpass ? true : false;
+		}
+
+	},
+
+//==========================================================
+//task对象，包含了对任务的操作
+//
+//==========================================================
+var	task = {
+	
+		/*
+		*获取今天任务
+		*
+		*/
+		getTodayTask : function(){},
+	
+		/*
+		*获取即将任务
+		*
+		*/
+		getFutureTask : function(){},
+
+		/*
+		*获取已完成任务
+		*
+		*/
+		getFinishedTask : function(){},
+
+
+		/*
+		*创建一条任务
+		*
+		*/
+		createOneTask : function(){},
+
+		/*
+		*删除一条任务
+		*
+		*/
+		deleteOneTask : function(){},
+
+		/*
+		*修改一条任务
+		*
+		*/
+		updateOneTask : function(){},
+
+		/*
+		*添加或修改闹钟提醒
+		*
+		*/
+		setClockForTask : function(){},
+
+		/*
+		*删除闹钟提醒
+		*
+		*/
+		deleteClcokForTask : function(){},
+
+
+		/*
+		*自动推送今日未完成到明日
+		*
+		*/
+		updateNotFinishedToTommorror : function(){},
+
+
+		/*
+		*
+		*
+		*/
+		 : function(){},
+	};

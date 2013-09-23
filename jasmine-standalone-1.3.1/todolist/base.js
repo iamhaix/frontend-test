@@ -36,8 +36,12 @@ base.setCookie = function(params){
 	}else{
 		return false;
 	}
-
-	s += (params.date ? (";expires=" + (param.date).toGMTString() ): "");
+	
+	var exp = new Date();
+	if(params.day ){
+		exp.setTime((exp.getTime()+(params.day)*24*60*60*1000));
+		s += ";expires=" + exp.toGMTString(); 
+	}
 
 	s += (params.path ? (";path=" + params.path ): "");
 
@@ -47,6 +51,7 @@ base.setCookie = function(params){
 
 	document.cookie = s;
 
+//	console.log("s:"+s+"||||cookie:"+document.cookie);
 	return true;
 }
 
@@ -72,13 +77,30 @@ base.getCookie = function (name) {
  *删除cookie
  *注意！此处比粗domain和path匹配的情况下，name为iname的cookie才可以被删除
  */
-base.deleteCookie = function(iname, idomain, ipath){
+base.deleteCookie = function(iname,ipath,idomain){
 	
-	var s = iname + "=;" + ";expires=-1";
-	s += (idomain != null ? ";domain=" + idomain : "");
-	s += (ipath != null ? ";path=" + ipath : "");
-	
-	document.cookie = s;
+	var val = base.getCookie(iname);
+	if (val) {
+		
+		base.setCookie({name:iname, value:val, day:-1, path:ipath, domain:idomain});
+	}else {
+
+		return null;
+	}
+
+	//console.log("cookie="+base.getCookie(name));
 
 	return true;
 }
+
+//删除cookie
+//base.delCookie = function(name) {
+//	var exp = - 1;
+//
+//	var cval = base.getCookie(name);
+//
+//	if (cval != null) base.setCookie({name:name, value:cval, day:exp});
+//	console.log("uid===="+base.getCookie(name));
+//	return true;
+//}
+
